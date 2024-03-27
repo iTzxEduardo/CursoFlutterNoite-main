@@ -1,0 +1,17 @@
+Tarefa:
+
+Crie um aplicativo Flutter.
+No corpo do aplicativo, use o widget Column para organizar linhas.
+Cada linha deve conter widgets Text representando informações de uma pessoa 
+(Nome, Idade, Endereço, Telefone, Email).
+
+Desafio Extra:
+Adicione ícones (por exemplo, ícones de pessoa, idade e país) à esquerda de cada linha para representar visualmente o tipo de informação.
+
+Super Desafio:
+Torne a tabela interativa. Ao tocar em uma linha, exiba um SnackBar com mais informações sobre a pessoa (por exemplo, um endereço fictício).
+
+Dicas:
+Use o widget Row dentro da Column para organizar informações em cada linha.
+Considere o uso de ícones da biblioteca Icons para representar visualmente as informações.
+Utilize o widget GestureDetector para adicionar interatividade.

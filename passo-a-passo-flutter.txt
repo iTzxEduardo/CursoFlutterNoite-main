@@ -1,0 +1,11 @@
+1º instalar o flutter c:\src\flutter
+2º configurar as variáveis de Ambiente (path)
+    - usuário (c:\src\fluter\bin)
+    - sistema (c:\src\fluter\bin)
+3º instalar configurar o git
+4º instalar e configurar o VsCode(sincronizar github +perfil)
+5º instalar as extensões do flutter/dart
+6º verificar a versão do flutter(CMD) 
+    - erro do PAth do GIT
+    git config --global --add safe.directory C:/src/flutter
+7º criar uma workSpace do flutter
