@@ -1,8 +1,10 @@
+// Importação de pacotes necessários para o funcionamento do app.
 import 'package:exemplo_sqllite/Controller.dart';
 import 'package:exemplo_sqllite/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Definição da HomePage como um StatefulWidget, o que permite que seu estado seja mutável.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,11 +12,12 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// Estado da HomePage, onde a lógica e a interface do usuário são definidos.
 class _HomePageState extends State<HomePage> {
-  final dbHelper = BancoDadosCrud();
-  final _formKey = GlobalKey<FormState>();
+  final dbHelper = BancoDadosCrud(); // Instância da classe que gerencia o banco de dados.
+  final _formKey = GlobalKey<FormState>(); // Chave global para o formulário, usada para validação.
 
-  // Controllers para os campos de texto
+  // Controladores para os campos de texto, permitindo que sejam lidos ou modificados.
   TextEditingController _idController = TextEditingController();
   TextEditingController _nomeController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -23,20 +26,26 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Construção da interface da HomePage.
     return Scaffold(
       appBar: AppBar(
         title: Text('SQLite Demo'),
       ),
+      // FutureBuilder para carregar e exibir os dados do banco de dados de forma assíncrona.
       body: FutureBuilder<List<ContatoModel>>(
-        future: dbHelper.getContacts(),
+        future: dbHelper.getContacts(), // Carrega os contatos do banco de dados.
         builder: (context, snapshot) {
+          // Verifica o estado da conexão do Future.
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
+            // Exibe um erro caso algo dê errado.
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // Caso não haja dados, informa o usuário.
             return Center(child: Text('Nenhum Contato Cadastrado.'));
           } else {
+            // Se houver dados, constrói uma lista com eles.
             return ListView.builder(
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) {
@@ -45,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                   title: Text(contact.nome),
                   subtitle: Text(contact.email),
                   onTap: () {
-                    // Criar um metodo para ver informaçoes do contato
+                    // Aqui poderia ser implementada uma lógica para ver detalhes do contato.
                   },
                 );
               },
@@ -53,16 +62,17 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
+      // Botão para adicionar novos contatos.
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddContactDialog(context);
+          _showAddContactDialog(context); // Mostra um diálogo para adicionar novo contato.
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  // Método para exibir um diálogo para adicionar um novo contato
+  // Diálogo para adicionar um novo contato, utilizando um Form para validação.
   void _showAddContactDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -70,88 +80,36 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: Text('Add Contact'),
           content: Form(
-            key: _formKey,
+            key: _formKey, // Associa a chave global do formulário para validação.
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  controller: _idController,
-                  decoration: InputDecoration(labelText: 'ID'),
-                  keyboardType: TextInputType
-                      .number, // Define o tipo de teclado para numérico
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter
-                    .digitsOnly // Permite apenas a entrada de dígitos
-                  ],
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter an ID';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'Please enter a valid ID (only digits allowed)';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _nomeController,
-                  decoration: InputDecoration(labelText: 'Nome'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a name';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
-                ),
-                TextFormField(
-                  controller: _telefoneController,
-                  decoration: InputDecoration(labelText: 'Phone'),
-                ),
-                TextFormField(
-                  controller: _enderecoController,
-                  decoration: InputDecoration(labelText: 'Address Line 1'),
-                ),
+                // Campos de texto com validação para ID, nome, email, telefone e endereço.
+                 // Campos aqui.
               ],
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _addContact();
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Add'),
-            ),
+            // Botões para cancelar ou adicionar o contato, com ação de validação do formulário.
+            // Botões aqui.
           ],
         );
       },
     );
   }
 
-  // Método para adicionar um novo contato ao banco de dados
+  // Método para adicionar um novo contato ao banco de dados e atualizar a interface.
   void _addContact() {
     final newContact = ContatoModel(
       id: int.parse(_idController.text),
       nome: _nomeController.text,
       email: _emailController.text,
-      telefone: _telefoneController.text,
-      endereco: _enderecoController.text,
+   
     );
 
-    dbHelper.create(newContact);
+    dbHelper.create(newContact); // Cria um novo contato no banco de dados.
     setState(() {
-      // Atualiza a lista de contatos
+      // Força a reconstrução do widget para atualizar a lista de contatos.
     });
   }
 }

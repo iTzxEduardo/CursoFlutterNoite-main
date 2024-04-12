@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Lista de Tarefas SP",
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.blue), // Define o tema do aplicativo
       home: TaskListScreen(),
     );
   }
@@ -23,9 +23,7 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   List<String> tasks = []; // Lista de tarefas
-  final TextEditingController _controller =
-      TextEditingController(); // Controlador de texto para o campo de entrada de nova tarefa
-
+  final TextEditingController _controller = TextEditingController(); // Controlador de texto para o campo de entrada de nova tarefa
 
   @override
   void initState() {
@@ -33,24 +31,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
     loadTasks(); // Carrega as tarefas ao iniciar a tela
   }
 
-
   Future<void> loadTasks() async {
-    SharedPreferences prefs = await SharedPreferences
-        .getInstance(); // Obtém as preferências compartilhadas
+    SharedPreferences prefs = await SharedPreferences.getInstance(); // Obtém as preferências compartilhadas
     setState(() {
-      tasks = prefs.getStringList('tasks') ??
-          []; // Carrega as tarefas armazenadas ou uma lista vazia se não houver tarefas
+      tasks = prefs.getStringList('tasks') ?? []; // Carrega as tarefas armazenadas ou uma lista vazia se não houver tarefas
     });
   }
 
-
   Future<void> saveTasks() async {
-    SharedPreferences prefs = await SharedPreferences
-        .getInstance(); // Obtém as preferências compartilhadas
-    await prefs.setStringList('tasks',
-        tasks); // Salva a lista de tarefas nas preferências compartilhadas
+    SharedPreferences prefs = await SharedPreferences.getInstance(); // Obtém as preferências compartilhadas
+    await prefs.setStringList('tasks', tasks); // Salva a lista de tarefas nas preferências compartilhadas
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +71,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
               return AlertDialog(
                 title: Text('Nova Tarefa'), // Título do diálogo de nova tarefa
                 content: TextField(
-                  controller:
-                      _controller, // Controlador de texto para o campo de entrada
+                  controller: _controller, // Controlador de texto para o campo de entrada
                   decoration: InputDecoration(
-                      hintText: 'Digite a tarefa'), // Dica no campo de entrada
+                    hintText: 'Digite a tarefa'), // Dica no campo de entrada
                 ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        tasks.add(
-                            _controller.text); // Adiciona a nova tarefa à lista
+                        tasks.add(_controller.text); // Adiciona a nova tarefa à lista
                         saveTasks(); // Salva as tarefas atualizadas
                         _controller.clear(); // Limpa o campo de entrada
                         Navigator.of(context).pop(); // Fecha o diálogo

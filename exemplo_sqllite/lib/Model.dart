@@ -4,8 +4,7 @@ class ContatoModel {
   int id;
   String nome;
   String email;
-  String telefone;
-  String endereco;
+
 
 
 //constutot
@@ -13,8 +12,7 @@ class ContatoModel {
  required this.id,
  required this.nome,
  required this.email,
- required this.telefone,
- required this.endereco
+
   });
 
   //mapeamentos
@@ -23,8 +21,7 @@ class ContatoModel {
       'id': id,
       'nome': nome,
       'email': email,
-      'telefone': telefone,
-      'endereco': endereco,
+     
     };
   }
     factory ContatoModel.fromMap(Map<String, dynamic> map) {
@@ -32,8 +29,7 @@ class ContatoModel {
       id: map['id'],
       nome: map['nome'],
       email: map['email'],
-      telefone: map['telefone'],
-      endereco: map['endereco'],
+    
     );
   }
 }
