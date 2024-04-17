@@ -1,14 +1,14 @@
 import 'package:path/path.dart'; // Importa a função join para manipular caminhos de arquivo
-import 'package:sa2_correcao/UserModel.dart'; // Importa o modelo de usuário
+import 'package:sa3_lista/UserModel.dart';
 import 'package:sqflite/sqflite.dart'; // Importa a biblioteca Sqflite para interagir com o banco de dados
 
 // Classe para realizar operações CRUD no banco de dados
 class BancoDadosCrud {
-  static const String DB_NOME = 'users.db'; // Nome do banco de dados
-  static const String TABLE_NOME = 'users'; // Nome da tabela
+  static const String DB_NOME = 'lista1.db'; // Nome do banco de dados
+  static const String TABLE_NOME = 'lista1'; // Nome da tabela
   static const String
       SCRIPT_CRIACAO_TABELA = // Script SQL para criar a tabela
-      "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY," +
+      "CREATE TABLE IF NOT EXISTS lista1(id INTEGER PRIMARY KEY," +
           "nome TEXT,"+ " email TEXT," + "senha TEXT)";
 
   // Método privado para obter uma instância do banco de dados

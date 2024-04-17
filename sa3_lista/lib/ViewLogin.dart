@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// Importando os arquivos necessários
+import 'package:sa3_lista/ViewConfiguracores.dart';
 import 'DataBaseController.dart';
 import 'UserModel.dart';
 import 'ViewCadastro.dart';
-import 'ViewConfiguracoes.dart';
 
 // Classe para a tela de login
 class LoginScreen extends StatelessWidget {
