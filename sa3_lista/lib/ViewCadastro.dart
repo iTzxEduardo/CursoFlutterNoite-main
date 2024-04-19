@@ -1,126 +1,187 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
+import 'dart:convert'; // Importa o pacote 'dart:convert' para utilizar funções de codificação e decodificação JSON
+import 'package:flutter/material.dart'; // Importa o pacote Flutter para utilizar os widgets do Material Design
+import 'package:shared_preferences/shared_preferences.dart'; // Importa o pacote para acessar as preferências compartilhadas
 
-// Importando os arquivos necessários
-import 'DataBaseController.dart';
-import 'UserModel.dart';
+class Task {
+  String title; // Título da tarefa
+  String status; // Status da tarefa
 
-// Tela de cadastro que é um StatelessWidget
-class CadastroScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Cadastro'), // Título da barra superior
-      ),
-      body: Center(
-        child: CadastroForm(), // Widget do formulário de cadastro
-      ),
+  Task({required this.title, required this.status}); // Construtor da classe Task
+
+  // Método para serializar uma tarefa em um mapa
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'status': status,
+    };
+  }
+
+  // Método para criar uma tarefa a partir de um mapa
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return Task(
+      title: map['title'],
+      status: map['status'],
     );
   }
 }
 
-// Formulário de cadastro que é um StatefulWidget
-class CadastroForm extends StatefulWidget {
+class PaginaHome extends StatefulWidget {
+  String email; // E-mail do usuário
+  PaginaHome({required this.email}); // Construtor da classe PaginaHome
+
   @override
-  _CadastroFormState createState() =>
-      _CadastroFormState(); // Cria uma instância do estado do formulário de cadastro
+  State<PaginaHome> createState() => _PaginaHomeState(email: email); // Cria e retorna o estado da página home
 }
 
-// Estado do formulário de cadastro
-class _CadastroFormState extends State<CadastroForm> {
-  final _formKey =
-      GlobalKey<FormState>(); // Chave global para identificar o formulário
-  TextEditingController _emailController =
-      TextEditingController(); // Controlador para o campo de email
-  TextEditingController _senhaController =
-      TextEditingController(); // Controlador para o campo de senha
+class _PaginaHomeState extends State<PaginaHome> {
+  late SharedPreferences _prefs; // Preferências compartilhadas para armazenar as tarefas
+  String email; // E-mail do usuário
+  List<Task> _tasks = []; // Lista de tarefas
+  TextEditingController _taskController = TextEditingController(); // Controlador do campo de nova tarefa
+  String _selectedStatus = 'Todos'; // Status selecionado para filtrar as tarefas
 
-  // Método para cadastrar o usuário
-  void cadastrarUsuario(BuildContext context) async {
-    String email = _emailController.text; // Obtém o email inserido
-    String password = _senhaController.text; // Obtém a senha inserida
+  _PaginaHomeState({required this.email}); // Construtor da classe _PaginaHomeState
 
-    User user = User(
-        email: email,
-        senha: password); // Cria um objeto User com os dados inseridos
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences(); // Carrega as preferências compartilhadas ao iniciar a tela
+  }
 
-    BancoDadosCrud bancoDados =
-        BancoDadosCrud(); // Instancia a classe para controle do banco de dados
-    try {
-      bancoDados.create(
-          user); // Chama o método para criar o usuário no banco de dados
-      ScaffoldMessenger.of(context).showSnackBar(
-        // Exibe uma mensagem indicando que o usuário foi cadastrado com sucesso
-        SnackBar(content: Text('Usuário cadastrado com sucesso!')),
-      );
-      Navigator.pop(
-          context); // Fecha a tela de cadastro e retorna para a tela de login
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        // Exibe uma mensagem de erro caso ocorra uma exceção ao cadastrar o usuário
-        SnackBar(content: Text('Erro ao cadastrar usuário: $e')),
-      );
+  Future<void> _loadPreferences() async {
+    _prefs = await SharedPreferences.getInstance(); // Obtém as preferências compartilhadas
+    _loadTasksFromPrefs(); // Carrega as tarefas salvas
+  }
+
+  void _loadTasksFromPrefs() {
+    List<String>? tasksJson = _prefs.getStringList('${email}_tasks'); // Obtém a lista de tarefas em formato JSON
+    if (tasksJson != null) {
+      setState(() {
+        _tasks = tasksJson
+            .map((json) =>
+                Task.fromMap(Map<String, dynamic>.from(jsonDecode(json))))
+            .toList(); // Converte os dados JSON de volta para objetos Task
+      });
     }
   }
 
-  // Método de construção do widget
+  void _saveTasksToPrefs() {
+    List<String> tasksJson =
+        _tasks.map((task) => jsonEncode(task.toMap())).toList(); // Converte as tarefas para JSON
+    _prefs.setStringList('${email}_tasks', tasksJson); // Salva as tarefas nas preferências compartilhadas
+  }
+
+  void _addTask(String title) {
+    setState(() {
+      _tasks.add(Task(title: title, status: 'Em andamento')); // Adiciona uma nova tarefa à lista
+      _saveTasksToPrefs(); // Salva as tarefas após adicionar uma nova
+    });
+    _taskController.clear(); // Limpa o campo de nova tarefa após adicionar
+  }
+
+  void _deleteTask(int index) {
+    setState(() {
+      _tasks.removeAt(index); // Remove a tarefa na posição especificada
+      _saveTasksToPrefs(); // Salva as tarefas após excluir uma
+    });
+  }
+
+  void _updateTaskStatus(int index, String status) {
+    setState(() {
+      _tasks[index].status = status; // Atualiza o status da tarefa na posição especificada
+      _saveTasksToPrefs(); // Salva as tarefas após atualizar o status
+    });
+  }
+
+  List<Task> _filteredTasks() {
+    if (_selectedStatus == 'Todos') {
+      return _tasks; // Retorna todas as tarefas se o status selecionado for 'Todos'
+    } else {
+      return _tasks.where((task) => task.status == _selectedStatus).toList(); // Filtra as tarefas pelo status selecionado
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Form(
-        key: _formKey, // Associando a chave global ao formulário
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de Tarefas'), // Título da barra de aplicativo
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
-              'Cadastro', // Título do formulário de cadastro
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            TextField(
+              controller: _taskController,
+              decoration: InputDecoration(
+                hintText: 'Nova Tarefa',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    if (_taskController.text.trim().isNotEmpty) {
+                      _addTask(_taskController.text.trim()); // Adiciona uma nova tarefa ao pressionar o botão de adicionar
+                    }
+                  },
+                ),
               ),
             ),
             SizedBox(height: 20),
-            TextFormField(
-              controller:
-                  _emailController, // Associando o controlador ao campo de email
-              decoration: InputDecoration(
-                  labelText: 'E-mail'), // Configuração do campo de email
-              validator: (value) {
-                if (value?.trim().isEmpty ?? true) {
-                  return 'Por favor, insira seu e-mail'; // Validando se o campo de email está vazio
-                }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value!)) {
-                  return 'E-mail inválido'; // Validando se o formato do email é válido
-                }
-                return null;
+            DropdownButton<String>(
+              value: _selectedStatus,
+              onChanged: (value) {
+                setState(() {
+                  _selectedStatus = value!; // Atualiza o status selecionado ao alterar a opção no dropdown
+                });
               },
+              items:
+                  <String>['Todos', 'Em andamento', 'Concluída', 'Finalizada']
+                      .map((status) => DropdownMenuItem(
+                            value: status,
+                            child: Text(status),
+                          ))
+                      .toList(), // Define as opções do dropdown com base nos status possíveis
             ),
             SizedBox(height: 20),
-            TextFormField(
-              controller:
-                  _senhaController, // Associando o controlador ao campo de senha
-              decoration: InputDecoration(
-                  labelText: 'Senha'), // Configuração do campo de senha
-              obscureText: true, // Ocultando o texto da senha
-              validator: (value) {
-                if (value?.trim().isEmpty ?? true) {
-                  return 'Por favor, insira sua senha'; // Validando se o campo de senha está vazio
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // Validando o formulário antes de cadastrar o usuário
-                  cadastrarUsuario(
-                      context); // Chamando o método para cadastrar o usuário
-                }
-              },
-              child: Text('Cadastrar'), // Texto do botão de cadastro
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredTasks().length,
+                itemBuilder: (context, index) {
+                  final task = _filteredTasks()[index];
+                  return ListTile(
+                    title: Text(task.title),
+                    subtitle: Text(task.status),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text('Concluída'),
+                          value: 'Concluída',
+                        ),
+                        PopupMenuItem(
+                          child: Text('Em andamento'),
+                          value: 'Em andamento',
+                        ),
+                        PopupMenuItem(
+                          child: Text('Finalizada'),
+                          value: 'Finalizada',
+                        ),
+                        PopupMenuItem(
+                          child: Text('Apagar'),
+                          value: 'Apagar',
+                        ),
+                      ],
+                      onSelected: (value) {
+                        if (value == 'Apagar') {
+                          _deleteTask(index); // Exclui a tarefa ao selecionar a opção 'Apagar' no menu popup
+                        } else {
+                          _updateTaskStatus(index, value.toString()); // Atualiza o status da tarefa
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

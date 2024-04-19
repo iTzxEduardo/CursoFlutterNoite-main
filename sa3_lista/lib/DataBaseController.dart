@@ -4,8 +4,8 @@ import 'package:sqflite/sqflite.dart'; // Importa a biblioteca Sqflite para inte
 
 // Classe para realizar operações CRUD no banco de dados
 class BancoDadosCrud {
-  static const String DB_NOME = 'lista1.db'; // Nome do banco de dados
-  static const String TABLE_NOME = 'lista1'; // Nome da tabela
+  static const String DB_NOME = 'somativa.db'; // Nome do banco de dados
+  static const String TABLE_NOME = 'somativa'; // Nome da tabela
   static const String
       SCRIPT_CRIACAO_TABELA = // Script SQL para criar a tabela
       "CREATE TABLE IF NOT EXISTS lista1(id INTEGER PRIMARY KEY," +
@@ -70,7 +70,4 @@ class BancoDadosCrud {
       return acessoPermitido; // Retorna a variável de acesso em caso de erro
     }
   }
-
-  // Método para realizar o login (ainda não implementado)
-  realizarLogin(String email, String senha) {}
 }
