@@ -21,6 +21,7 @@ class Usuario {
       nome: map['u_nome'],
       email: map['email'],
       senha: map['senha'],
+      
     );
   }
 

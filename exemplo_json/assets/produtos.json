@@ -1,0 +1,17 @@
+[
+    {
+        "nome": "CPU",
+        "preco": 599.90,
+        "caregoria": "Informática"
+    },
+    {
+        "nome": "Camiseta Linux",
+        "preco": 49.90,
+        "caregoria": "Vestuário"
+    },
+    {
+        "nome": "Mouse Pad",
+        "preco": 19.90,
+        "caregoria": "Acessório"
+    }
+]
