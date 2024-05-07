@@ -5,6 +5,7 @@ class Livro {
   final String sinopse;
   final String categoria;
   final int isbn;
+  final String capa;
 
   //construtor
   Livro(
@@ -12,7 +13,8 @@ class Livro {
       required this.autor,
       required this.sinopse,
       required this.categoria,
-      required this.isbn});
+      required this.isbn,
+      required this.capa});
 
   //metodos
   Map<String, dynamic> toJson() {
@@ -22,6 +24,7 @@ class Livro {
       'sinopse': sinopse,
       'categoria': categoria,
       'isbn': isbn,
+      'capa': capa
     };
   }
 
@@ -32,6 +35,7 @@ class Livro {
       sinopse: json['sinopse'],
       categoria: json['categoria'],
       isbn: json['isbn'],
+      capa: json['capa'],
     );
   }
 }

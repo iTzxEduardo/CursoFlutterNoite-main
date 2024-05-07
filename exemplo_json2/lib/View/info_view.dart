@@ -1,5 +1,6 @@
-import 'package:exemplo_json2/Model/livros_model.dart';
 import 'package:flutter/material.dart';
+
+import '../Model/livros_model.dart';
 
 class LivroInfoPage extends StatelessWidget {
   Livro info;
@@ -11,15 +12,20 @@ class LivroInfoPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Livro Info'),
       ),
-      body: Center(
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Expanded(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(info.capa),
             Text(info.titulo),
             Text(info.autor),
+            Text(info.sinopse),
             Text(info.categoria),
             Text("${info.isbn}"),
           ],
-        )
+        )),
       ),
     );
   }

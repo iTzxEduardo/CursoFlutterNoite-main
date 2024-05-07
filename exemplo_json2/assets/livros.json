@@ -4,20 +4,34 @@
     "autor" : " Isaac Asimov",
     "sinopse" : "O fim da eternidade é um Kivro de ficção cientifica escrito",
     "categoria" : "Ficção Científica",
-    "isbn" : "1234567890123"
+    "isbn" : 1234567890123,
+    "capa": "assets/img/img01.jpg"
+
 },
 {
     "titulo" : "O morro dos ventos",
     "autor" : "Emily Bronte",
     "sinopse" : "O morro dos ventos é um Kivro de ficção cientifica escrito",
     "categoria" : "Terror",
-    "isbn" : "12345678910"
+    "isbn" : 12345678910,
+    "capa": "assets/img/img02.jpg"
 },
 {
     "titulo" : "Mémoria Póstuma de bras cubs",
     "autor" : "Machado de Assis",
     "sinopse" : "Mémoria Póstuma de bras cubs é um livro de ficção cientifica escrito",
     "categoria" : "Ficção Científica",
-    "isbn" : "1234567891011"
+    "isbn" : 1234567891011,
+    "capa": "assets/img/img03.jpg"
+},
+{
+    "titulo": "O Senhor dos Anéis",
+    "autor": "JKTolkin",
+    "sinopse": "O Senhor dos Anéis é um livro de ficção científica escrito por",
+    "categoria": "Ficção Científica",
+    "isbn": 9788521603065,
+    "capa":"assets/img/img03.jpg"
 }
+
+ 
 ]
