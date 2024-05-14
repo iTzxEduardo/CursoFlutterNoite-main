@@ -199,7 +199,7 @@ class _CarroCadastroScreenState extends State<CarroCadastroScreen> {
     //verificacao
     //cadastrar carro
   _controller.addCarro(criarObjeto());
-
+  loadCarrosFromFile();
   _limparValores();
   _apagarCampos();
   //SnakBar
