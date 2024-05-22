@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_api_geo/View/favorito_screen.dart';
-import 'package:projeto_api_geo/View/historico_screen.dart';
+import 'package:projeto_api_geo/View/details_weather_screen.dart';
 import 'package:projeto_api_geo/View/home_screen.dart';
+import 'package:projeto_api_geo/View/search_screen.dart';
 
 void main () {  
   runApp(const MyApp());
@@ -17,10 +17,9 @@ class MyApp extends StatelessWidget {
       home: HomeScreen() ,
       debugShowCheckedModeBanner: false,
       routes:{
-        '/historico': (context) => HistoricoScreen(),
-        '/favorito': (context) => FavoritoScreen(),
-
-      } 
+        '/searche': (context) => SearchScreen(),
+        '/details': (context) => DetailsWeatherScreen(),
+            } 
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:projeto_api_geo/Controller/weather_controller.dart';
 import 'package:projeto_api_geo/Service/weather_service_api.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,26 +11,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  Map<String,dynamic> _weatherData = {};
-  WeatherService _weatherService = new WeatherService();
+  final WeatherController _controller = WeatherController();
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    _getWeatherInit();
   }
 
   Future <void> _getWeatherInit() async{
     try {
-      print("Sem Localização");
-      Position position = await Geolocator.getCurrentPosition(
-        
-      );
-      print(position.latitude);
-      _weatherData = await _weatherService.getWeatherByLocation(position.latitude, position.longitude);
-      print("Localização ok");
+      Position position = await Geolocator.getCurrentPosition();
+      _controller.getWeatherbyLocation(
+        position.latitude, position.longitude
+        );
       setState(() {
-        
       });
     } catch (e) {
       print(e);
@@ -39,65 +36,60 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:const Text("Previsão do Tempo"),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: (){},
-          )
-        ],
+        appBar: AppBar(
+          title: const Text("Previsão do Tempo"),
+          centerTitle: true,
+          backgroundColor: Colors.blue,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: Padding(
-          padding:const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: (){},
-                    child:const Text("Pesquisar")),
-                    ElevatedButton(
-                    onPressed: (){},
-                    child:const Text("Favoritos")),
-                ],
-              ),
-             const SizedBox(height: 20,),
-             _weatherData.isEmpty
-             ? 
-             Row(
-               children: [
-                const Text ("Erro de Conexão"),
-                 IconButton(
-                   icon: const Icon(Icons.refresh),
-                   onPressed: (){
-                     _getWeatherInit();
-                   },
-                 )
-               ],
-             )
-             :
-             Column(
+            padding: const EdgeInsets.all(12),
+            child: Column(
               children: [
-                Text(
-                  _weatherData["name"],
+                Row(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {Navigator.pushNamed(context,'/Pesquisar');}, child: const Text("Pesquisar")),
+                    ElevatedButton(
+                        onPressed: () {}, child: const Text("Favoritos"))
+                  ],
                 ),
-                  const SizedBox(height: 10),         
-                Text(
-                  _weatherData["weather"][0]["description"],
-                ),
-                const SizedBox(height: 10),  
-                Text(
-                  _weatherData["main"]["temp"].toString(),
-                ),
-                const SizedBox(height: 10),  
+                const SizedBox(height: 20),
+                    _controller.weatherList.isEmpty
+                    ? Row(
+                        children: [
+                          const Text("Erro de Conexão"),
+                          IconButton(
+                            icon: const Icon(Icons.refresh),
+                            onPressed: () {
+                              _getWeatherInit();
+                            },
+                          )
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          Text(_controller.weatherList.last.name),
+                          const SizedBox(height: 10),
+                          Text(_controller.weatherList.last.main),
+                          const SizedBox(height: 10),
+                          Text(_controller.weatherList.last.description),
+                          const SizedBox(height: 10),
+                          Text((_controller.weatherList.last.temp-273).toStringAsFixed(2)),
+                          IconButton(
+                            icon: const Icon(Icons.refresh),
+                            onPressed: () {
+                              _getWeatherInit();
+                            },
+                          )
+                        ],
+                      )
               ],
-             )
-            ],
-          ),
-        )
-    );
+            )));
   }
 }
