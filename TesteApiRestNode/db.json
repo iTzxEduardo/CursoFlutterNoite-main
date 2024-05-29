@@ -1,0 +1,21 @@
+{
+    "usuarios":[
+        {
+            "id":1,
+            "nome":"João",
+            "email":"joao@exemplo.com"
+        },
+        {
+            "id":2,
+            "nome":"Maria",
+            "email":"maria@exemplo.com"
+        }
+    ],
+    "produtos":[
+        {
+            "id":"1",
+            "nome": "teste",
+            "codigo":"123"
+        }
+    ]
+}

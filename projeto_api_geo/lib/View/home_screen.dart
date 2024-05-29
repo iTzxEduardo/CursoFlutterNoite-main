@@ -54,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     ElevatedButton(
-                        onPressed: () {Navigator.pushNamed(context,'/Pesquisar');}, child: const Text("Pesquisar")),
+                        onPressed: () {Navigator.pushNamed(context,'/search');}, 
+                        child: const Text("Search")),
                     ElevatedButton(
                         onPressed: () {}, child: const Text("Favoritos"))
                   ],
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                     _controller.weatherList.isEmpty
                     ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text("Erro de Conexão"),
                           IconButton(
