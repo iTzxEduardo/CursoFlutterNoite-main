@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "804309810203",
+    "project_id": "teste-fire-base-24741",
+    "storage_bucket": "teste-fire-base-24741.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804309810203:android:ac76723bd233039cc3ccbe",
+        "android_client_info": {
+          "package_name": "br.com.eduardo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804309810203-uel7vja0uhg9itm6smcsuf5fuv623f2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4Iaphq6RPFPl5IyCxtrgpLi9qptb-JM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804309810203-uel7vja0uhg9itm6smcsuf5fuv623f2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
