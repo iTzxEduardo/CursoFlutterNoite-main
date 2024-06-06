@@ -1,6 +1,7 @@
 import 'package:exemplo_firebase/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmedPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       //formulario de registro
@@ -44,25 +45,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Confirmar Senha',),
                 validator: (value) {},),
-                const SizedBox(height:20, ),
+                const SizedBox(height: 20,),
                 ElevatedButton(
                   onPressed: (){ _registrarUser();},
-                  child: const Text('Registrar'),
+                  child: Text('Registrar'),
                 )]
           )),
       ),)
     );
   }
+  
   Future<User?> _registrarUser() async {
     if(_formKey.currentState!.validate()){
-      if(_passwordController==_confirmedPasswordController){
+      if(_passwordController.text==_confirmedPasswordController.text){
         return await _service.registerUsuario(
-           _emailController.text,
-          _passwordController.text);
-          //navegação para pagina interna
+          _emailController.text, 
+          _confirmedPasswordController.text);
+          //navegação para págian interna
       }else{
         ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(
+          SnackBar(
             content: Text('As senhas não conferem!'),
           ),
         );
@@ -70,7 +72,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _confirmedPasswordController.clear();
         return null;
       }
-    }    
+    }
   }
 }
-

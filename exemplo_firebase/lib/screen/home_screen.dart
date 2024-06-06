@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,14 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           const Text(
+            const Text(
               'Login',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
-           const SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Text('Login'),
             ),
-           const SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(

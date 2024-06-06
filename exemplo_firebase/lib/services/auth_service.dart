@@ -1,22 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService{
-  //atributos
+class AuthService {
+  //atributio
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //metodos login user
+  //metodo login user
   Future<User?> loginUsuario(String email, String password) async{
     try{
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
-        password: password
+        password: password,
       );
       return userCredential.user;
     }catch(e){
       print(e.toString());
       return null;
     }
-
   }
 
   //metodo register user
@@ -32,8 +31,7 @@ class AuthService{
       return null;
     }
   }
-
-  //metodo logout user 
+  //logout user
   Future<void> logoutUsuario() async{
     try{
       await _auth.signOut();

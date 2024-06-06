@@ -1,7 +1,7 @@
 import 'package:exemplo_firebase/firebase_options.dart';
 import 'package:exemplo_firebase/screen/home_screen.dart';
-import 'package:exemplo_firebase/services/login_screen.dart';
-import 'package:exemplo_firebase/services/register_screen.dart';
+import 'package:exemplo_firebase/screen/login_screen.dart';
+import 'package:exemplo_firebase/screen/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +24,7 @@ class MainApp extends StatelessWidget {
       routes: {
         '/login':(context) => const LoginScreen(),
         '/register':(context) => const RegisterScreen(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }
