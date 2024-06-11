@@ -1,4 +1,4 @@
-import 'package:exemplo_firebase/screen/todolist_screen.dart';
+import 'package:exemplo_firebase/screens/todolist_screen.dart';
 import 'package:exemplo_firebase/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -61,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _acessarTodoList() async {
     User? user = await _loginUser();
     if (user != null) {
+      print("ok");
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => TodolistScreen(user: user)));
     }else{

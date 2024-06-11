@@ -19,16 +19,14 @@ class AuthService {
   }
 
   //metodo register user
-  Future<User?> registerUsuario(String email, String password) async{
+  Future<void> registerUsuario(String email, String password) async{
     try{
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return userCredential.user;
     }catch(e){
       print(e.toString());
-      return null;
     }
   }
   //logout user
@@ -39,5 +37,23 @@ class AuthService {
       print(e.toString());
     }
   }
+
+  //login google firebase
+  // Future<User?> loginGoogle() async{
+  //   try{
+  //     GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  //     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  //     AuthCredential credential = GoogleAuthProvider.getCredential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+  //     UserCredential userCredential = await _auth.signInWithCredential(credential);
+  //     return userCredential.user;
+  //   }catch(e){
+  //     print(e.toString());
+  //     return null;
+  //   }
+
+  // }
 
 }

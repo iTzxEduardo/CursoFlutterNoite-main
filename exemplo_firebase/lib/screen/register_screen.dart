@@ -34,7 +34,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'E-mail',),
-                validator: (value) {},),
+                validator: (value) {
+                  if(value!.isEmpty){
+                    return 'Insira um e-mail';
+                  }
+                    return null;
+                },),
                 TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -55,22 +60,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
   
-  Future<User?> _registrarUser() async {
+  Future<void> _registrarUser() async {
     if(_formKey.currentState!.validate()){
       if(_passwordController.text==_confirmedPasswordController.text){
-        return await _service.registerUsuario(
+        await _service.registerUsuario(
           _emailController.text, 
           _confirmedPasswordController.text);
           //navegação para págian interna
+        Navigator.pushNamed(context, '/login');
       }else{
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('As senhas não conferem!'),
           ),
         );
         _passwordController.clear();
         _confirmedPasswordController.clear();
-        return null;
+        
       }
     }
   }
