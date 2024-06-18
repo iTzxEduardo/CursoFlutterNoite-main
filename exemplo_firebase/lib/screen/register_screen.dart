@@ -1,82 +1,149 @@
-import 'package:exemplo_firebase/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:exemplo_firebase/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final AuthService _service = AuthService();
+  final AuthServices _service = AuthServices();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmedPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _emailError;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //formulario de registro
-      body:Padding(padding: EdgeInsets.all(8),
-      child: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'E-mail',),
-                validator: (value) {
-                  if(value!.isEmpty){
-                    return 'Insira um e-mail';
-                  }
+      appBar: AppBar(
+        title: Text('Registrar'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(),
+                    errorText: _emailError,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Insira um e-mail';
+                    }
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      return 'Insira um email válido';
+                    }
                     return null;
-                },),
+                  },
+                ),
+                SizedBox(height: 20),
                 TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Senha',),
-                validator: (value) {},),
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Insira uma senha';
+                    }
+                    if (value.length < 6) {
+                      return 'A senha deve ter pelo menos 6 caracteres';
+                    }
+                    return null;
+                  },
+                  obscureText: true,
+                ),
+                SizedBox(height: 20),
                 TextFormField(
-                controller: _confirmedPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Confirmar Senha',),
-                validator: (value) {},),
-                const SizedBox(height: 20,),
+                  controller: _confirmedPasswordController,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar Senha',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Confirme sua senha';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'As senhas não coincidem';
+                    }
+                    return null;
+                  },
+                  obscureText: true,
+                ),
+                SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: (){ _registrarUser();},
+                  onPressed: _registrarUser,
                   child: Text('Registrar'),
-                )]
-          )),
-      ),)
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  child: Text('Já tenho uma conta. Fazer Login'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
-  
+
   Future<void> _registrarUser() async {
-    if(_formKey.currentState!.validate()){
-      if(_passwordController.text==_confirmedPasswordController.text){
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _emailError = null; // Limpa o erro de e-mail antes de verificar novamente
+      });
+
+      String? emailError = await _service.checkIfEmailExists(_emailController.text);
+      if (emailError != null) {
+        setState(() {
+          _emailError = emailError; // Define o erro de e-mail existente
+        });
+        return;
+      }
+
+      try {
         await _service.registerUsuario(
-          _emailController.text, 
-          _confirmedPasswordController.text);
-          //navegação para págian interna
-        Navigator.pushNamed(context, '/login');
-      }else{
+          _emailController.text,
+          _confirmedPasswordController.text,
+        );
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('As senhas não conferem!'),
+          SnackBar(
+            content: Text('Registro realizado com sucesso!'),
           ),
         );
-        _passwordController.clear();
-        _confirmedPasswordController.clear();
-        
+        Navigator.pushReplacementNamed(context, '/login'); // Navega para a tela de login após o registro
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao registrar: ${e.toString()}'),
+          ),
+        );
       }
     }
   }

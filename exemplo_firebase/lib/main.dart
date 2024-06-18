@@ -1,9 +1,9 @@
 import 'package:exemplo_firebase/firebase_options.dart';
-import 'package:exemplo_firebase/screens/home_screen.dart';
-import 'package:exemplo_firebase/screens/register_screen.dart';
+import 'package:exemplo_firebase/screen/home_screen.dart';
+import 'package:exemplo_firebase/screen/login_screen.dart';
+import 'package:exemplo_firebase/screen/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

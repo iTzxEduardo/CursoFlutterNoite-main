@@ -38,7 +38,7 @@ class _LivrosPageState extends State<LivrosPage> {
                                 MaterialPageRoute(
                                   builder: (context) => LivroInfoPage(
                                       info: controller.livros[index]),
-                                )),
+                                ))
                                 // Navigator.push(
                           );
                         });
